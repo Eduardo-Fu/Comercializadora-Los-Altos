@@ -1,7 +1,7 @@
 # Comercializadora Los Altos — Sistema Web de Control de Inventarios y Colocación
 
-[![GitHub Pages](https://img.shields.io/badge/Demo_Online-GitHub_Pages-10b981?style=for-the-badge&logo=github&logoColor=white)](https://eduardo-fu.github.io/Losaltosproto/)
-[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEduardo-Fu%2FLosaltosproto)
+[![GitHub Pages](https://img.shields.io/badge/Demo_Online-GitHub_Pages-10b981?style=for-the-badge&logo=github&logoColor=white)](https://eduardo-fu.github.io/Comercializadora-Los-Altos/)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEduardo-Fu%2FComercializadora-Los-Altos)
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat&logo=react)](https://react.dev/)
@@ -24,21 +24,19 @@ La aplicación ya cuenta con el flujo automatizado de compilación en `.github/w
 
 1. En tu repositorio en GitHub, ve a **Settings** (pestaña superior).
 2. En el menú izquierdo, haz clic en **Pages**.
-3. En la sección **Build and deployment** > **Source**, selecciona: **`GitHub Actions`**.
-4. Haz `git push` a tu rama `main` (o ejecuta el workflow manualmente desde la pestaña **Actions**).
-5. Tu sitio estará disponible públicamente en:
-   👉 **`https://eduardo-fu.github.io/Losaltosproto/`**
+3. En la sección **Build and deployment** > **Source**, cambia el selector a: **`GitHub Actions`**.
+   *(Si dejas "Deploy from a branch", GitHub solo servirá código TypeScript crudo sin compilar, lo cual causa la pantalla en blanco).*
+4. Haz `git push` a tu rama `main`.
+5. Tu sitio estará disponible públicamente y funcionando en:
+   👉 **`https://eduardo-fu.github.io/Comercializadora-Los-Altos/`**
 
 ---
 
 ### Opción 2: Despliegue en Vercel (En 30 segundos)
 
 1. Ingresa a [Vercel](https://vercel.com) e inicia sesión con tu cuenta de GitHub.
-2. Haz clic en **Add New Project** e importa tu repositorio **`Eduardo-Fu/Losaltosproto`**.
-3. (Opcional) Si deseas conectar tu base de datos Supabase, agrega en **Environment Variables**:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Haz clic en **Deploy**. Obtendrás un enlace público permanente HTTPS (ejemplo: `https://losaltosproto.vercel.app`).
+2. Haz clic en **Add New Project** e importa tu repositorio **`Eduardo-Fu/Comercializadora-Los-Altos`**.
+3. Haz clic en **Deploy**. Obtendrás un enlace público permanente HTTPS (ejemplo: `https://comercializadora-los-altos.vercel.app`).
 
 ---
 

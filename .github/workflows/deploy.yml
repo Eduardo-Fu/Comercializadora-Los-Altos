@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -44,6 +44,13 @@ jobs:
           touch dist/.nojekyll
           cp public/404.html dist/404.html 2>/dev/null || cp dist/index.html dist/404.html
 
+      - name: Publicar en rama gh-pages (Compatible con 'Deploy from a branch')
+        uses: peaceiris/actions-gh-pages@v4
+        continue-on-error: true
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5
 
@@ -54,4 +61,5 @@ jobs:
 
       - name: Desplegar en GitHub Pages
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
