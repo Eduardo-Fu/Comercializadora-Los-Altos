@@ -1,0 +1,6 @@
+{
+  "name": "Comercializadora Los Altos",
+  "description": "Sistema Web de Control de Inventarios, Colocación y Reportes para Supermercados y Marcas Proveedoras en Guatemala",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

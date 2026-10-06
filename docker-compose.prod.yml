@@ -1,0 +1,74 @@
+services:
+  # Base de Datos PostgreSQL
+  postgres:
+    image: postgres:16-alpine
+    container_name: losaltos_postgres_prod
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - losaltos_network
+
+  # Aplicación Web Next.js (Standalone Multi-stage con Auto-migración)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: losaltos_app_prod
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: "postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?schema=public"
+      JWT_SECRET: ${JWT_SECRET}
+      NODE_ENV: "production"
+      PORT: 3000
+    volumes:
+      - uploads_prod_data:/app/public/uploads
+    networks:
+      - losaltos_network
+
+  # Nginx Reverse Proxy (Conexiones Web Públicas y SSL)
+  nginx:
+    image: nginx:alpine
+    container_name: losaltos_nginx_prod
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - certbot_etc:/etc/letsencrypt
+      - certbot_var:/var/lib/letsencrypt
+    networks:
+      - losaltos_network
+
+volumes:
+  postgres_prod_data:
+    driver: local
+  uploads_prod_data:
+    driver: local
+  certbot_etc:
+    driver: local
+  certbot_var:
+    driver: local
+
+networks:
+  losaltos_network:
+    driver: bridge

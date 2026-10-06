@@ -1,0 +1,265 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x", "linux-musl"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  COLOCADORA
+  EMPRESA
+}
+
+enum EstadoColaborador {
+  ACTIVA
+  INACTIVA
+}
+
+// -------------------------------------------------------------
+// MODELO DE USUARIOS Y AUTENTICACIÓN
+// -------------------------------------------------------------
+model User {
+  id           String      @id @default(cuid())
+  email        String      @unique
+  passwordHash String
+  name         String
+  role         Role        @default(COLOCADORA)
+  activo       Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  // Relaciones por tipo de perfil
+  colocadoraProfile ColocadoraProfile?
+  empresaProfile    Empresa?
+
+  @@map("users")
+}
+
+// -------------------------------------------------------------
+// PERFIL DE COLOCADORAS (CONTRATACIONES Y BAJAS)
+// -------------------------------------------------------------
+model ColocadoraProfile {
+  id                String            @id @default(cuid())
+  userId            String            @unique
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  nombre            String
+  dpi               String            @unique // Solamente números
+  fechaContratacion DateTime
+  estado            EstadoColaborador @default(ACTIVA)
+  motivoBaja        String?           // Motivo obligatorio al dar de baja
+  fechaBaja         DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  // Tiendas asignadas
+  tiendasAsignadas  ColocadoraTienda[]
+  
+  // Registros en campo
+  inventarios       InventarioRegistro[]
+  mermas            ProductoMalEstado[]
+  vencimientos      VencimientoRegistro[]
+
+  @@map("colocadora_profiles")
+}
+
+// -------------------------------------------------------------
+// EMPRESAS (PROVEEDORAS / CLIENTES)
+// -------------------------------------------------------------
+model Empresa {
+  id          String   @id @default(cuid())
+  nombre      String   @unique
+  contacto    String?
+  telefono    String?
+  email       String?
+  activo      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Acceso opcional de usuario para ver reportes
+  userId      String?  @unique
+  user        User?    @relation(fields: [userId], references: [id])
+
+  // Relaciones
+  productos   Producto[]
+  inventarios InventarioRegistro[]
+  mermas      ProductoMalEstado[]
+  vencimientos VencimientoRegistro[]
+  sugeridos   SugeridoRegistro[]
+
+  @@map("empresas")
+}
+
+// -------------------------------------------------------------
+// TIENDAS (SUPERMERCADOS INDEPENDIENTES)
+// -------------------------------------------------------------
+model Tienda {
+  id          String   @id @default(cuid())
+  nombre      String   // ej. Supermercados Gran Gallo, Más y Más, Espiga de Oro, La Estrella
+  direccion   String?
+  ciudad      String?
+  activa      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  colocadoras ColocadoraTienda[]
+  inventarios InventarioRegistro[]
+  mermas      ProductoMalEstado[]
+  vencimientos VencimientoRegistro[]
+  sugeridos   SugeridoRegistro[]
+
+  @@map("tiendas")
+}
+
+// Tabla intermedia N:M de asignación de tiendas a colocadoras
+model ColocadoraTienda {
+  id            String            @id @default(cuid())
+  colocadoraId  String
+  colocadora    ColocadoraProfile @relation(fields: [colocadoraId], references: [id], onDelete: Cascade)
+  tiendaId      String
+  tienda        Tienda            @relation(fields: [tiendaId], references: [id], onDelete: Cascade)
+  asignadoEn    DateTime          @default(now())
+
+  @@unique([colocadoraId, tiendaId])
+  @@map("colocadora_tiendas")
+}
+
+// -------------------------------------------------------------
+// CATÁLOGO DE PRODUCTOS
+// -------------------------------------------------------------
+model Producto {
+  id           String   @id @default(cuid())
+  nombre       String
+  codigoU      String   // Código interno de supermercado
+  codigoBarras String   // Código de barras
+  imagenUrl    String?  // Fotografía del producto
+  empresaId    String
+  empresa      Empresa  @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  activo       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // Relaciones
+  detallesInventario InventarioDetalle[]
+  mermas             ProductoMalEstado[]
+  vencimientos       VencimientoRegistro[]
+  sugeridos          SugeridoRegistro[]
+
+  @@index([empresaId])
+  @@index([codigoBarras])
+  @@index([codigoU])
+  @@map("productos")
+}
+
+// -------------------------------------------------------------
+// INVENTARIO EN TIENDA (CABECERA Y DETALLE)
+// -------------------------------------------------------------
+model InventarioRegistro {
+  id            String             @id @default(cuid())
+  fecha         DateTime           @default(now())
+  colocadoraId  String
+  colocadora    ColocadoraProfile  @relation(fields: [colocadoraId], references: [id])
+  tiendaId      String
+  tienda        Tienda             @relation(fields: [tiendaId], references: [id])
+  empresaId     String
+  empresa       Empresa            @relation(fields: [empresaId], references: [id])
+  observaciones String?
+  createdAt     DateTime           @default(now())
+
+  detalles      InventarioDetalle[]
+
+  @@index([colocadoraId])
+  @@index([tiendaId])
+  @@index([empresaId])
+  @@index([fecha])
+  @@map("inventario_registros")
+}
+
+model InventarioDetalle {
+  id                   String             @id @default(cuid())
+  inventarioRegistroId String
+  inventarioRegistro   InventarioRegistro @relation(fields: [inventarioRegistroId], references: [id], onDelete: Cascade)
+  productoId           String
+  producto             Producto           @relation(fields: [productoId], references: [id])
+  cantidadFisica       Int                // Regla: Enteros >= 0, sin letras, sin '00'
+
+  @@index([inventarioRegistroId])
+  @@index([productoId])
+  @@map("inventario_detalles")
+}
+
+// -------------------------------------------------------------
+// PRODUCTOS EN MAL ESTADO (MERMAS CON FOTOGRAFÍA)
+// -------------------------------------------------------------
+model ProductoMalEstado {
+  id           String             @id @default(cuid())
+  fecha        DateTime           @default(now())
+  empresaId    String
+  empresa      Empresa            @relation(fields: [empresaId], references: [id])
+  colocadoraId String?
+  colocadora   ColocadoraProfile? @relation(fields: [colocadoraId], references: [id])
+  tiendaId     String
+  tienda       Tienda             @relation(fields: [tiendaId], references: [id])
+  productoId   String
+  producto     Producto           @relation(fields: [productoId], references: [id])
+  imagenUrl    String             // Fotografía obligatoria del producto en mal estado
+  descripcion  String             // Descripción detallada de lo sucedido
+  createdAt    DateTime           @default(now())
+
+  @@index([empresaId])
+  @@index([tiendaId])
+  @@index([productoId])
+  @@index([fecha])
+  @@map("productos_mal_estado")
+}
+
+// -------------------------------------------------------------
+// FECHAS DE VENCIMIENTO DE PRODUCTOS
+// -------------------------------------------------------------
+model VencimientoRegistro {
+  id               String             @id @default(cuid())
+  fechaRegistro    DateTime           @default(now())
+  fechaVencimiento DateTime           // Fecha de vencimiento del lote
+  empresaId        String
+  empresa          Empresa            @relation(fields: [empresaId], references: [id])
+  colocadoraId     String?
+  colocadora       ColocadoraProfile? @relation(fields: [colocadoraId], references: [id])
+  tiendaId         String
+  tienda           Tienda             @relation(fields: [tiendaId], references: [id])
+  productoId       String
+  producto         Producto           @relation(fields: [productoId], references: [id])
+  cantidad         Int                @default(1)
+  createdAt        DateTime           @default(now())
+
+  @@index([empresaId])
+  @@index([tiendaId])
+  @@index([productoId])
+  @@index([fechaVencimiento])
+  @@map("vencimiento_registros")
+}
+
+// -------------------------------------------------------------
+// HISTORIAL DE PEDIDOS SUGERIDOS
+// -------------------------------------------------------------
+model SugeridoRegistro {
+  id               String   @id @default(cuid())
+  fecha            DateTime @default(now())
+  empresaId        String
+  empresa          Empresa  @relation(fields: [empresaId], references: [id])
+  tiendaId         String
+  tienda           Tienda   @relation(fields: [tiendaId], references: [id])
+  productoId       String
+  producto         Producto @relation(fields: [productoId], references: [id])
+  cantidadSugerida Int
+  notas            String?
+  createdAt        DateTime @default(now())
+
+  @@index([empresaId])
+  @@index([tiendaId])
+  @@index([productoId])
+  @@map("sugerido_registros")
+}
