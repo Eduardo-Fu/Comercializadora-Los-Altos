@@ -3,7 +3,7 @@ import path from 'path';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-  base: './',
+  base: process.env.GITHUB_PAGES === 'true' ? '/Losaltosproto/' : './',
   plugins: [react()],
   resolve: {
     alias: {
