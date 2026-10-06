@@ -232,6 +232,94 @@ JWT_SECRET="losaltos_super_secret_jwt_key_2026_securerandom"`}
           </div>
         </div>
       </div>
+
+      {/* Supabase Connected Database Section */}
+      <div className="bg-gradient-to-br from-emerald-950/40 via-slate-900 to-slate-900 border border-emerald-500/30 rounded-2xl p-6 shadow-xl">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4 pb-4 border-b border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center border border-emerald-500/30">
+              <Database className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-bold text-white">Conexión con Supabase</h3>
+                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Activo & Sincronizado
+                </span>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Proyecto: <code className="text-emerald-300 font-mono">mcpscfblpvffqjloukiz</code> (Región us-west-2, Oregon)
+              </p>
+            </div>
+          </div>
+          <div className="text-xs text-slate-400 font-mono bg-slate-950/80 px-3 py-1.5 rounded-lg border border-slate-800">
+            https://mcpscfblpvffqjloukiz.supabase.co
+          </div>
+        </div>
+
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3">
+          Tablas Mapeadas en tu Base de Datos Supabase:
+        </h4>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">tiendas</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code> (uuid)</div>
+              <div>• <code>nombre</code> (text)</div>
+              <div>• <code>creado_en</code> (timestamptz)</div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">empresas</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code> (uuid)</div>
+              <div>• <code>nombre</code> (text)</div>
+              <div>• <code>creado_en</code> (timestamptz)</div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">productos</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code> (uuid)</div>
+              <div>• <code>empresa_id</code> (uuid)</div>
+              <div>• <code>nombre</code>, <code>codigo_u</code>, <code>codigo_barras</code></div>
+              <div>• <code>url_imagen</code></div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">colocadoras</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code>, <code>nombre</code>, <code>dpi</code></div>
+              <div>• <code>tiendas_asignadas</code> (text)</div>
+              <div>• <code>fecha_contratacion</code>, <code>estado</code></div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">inventarios</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code> (uuid)</div>
+              <div>• <code>colocadora_id</code>, <code>tienda_id</code>, <code>producto_id</code></div>
+              <div>• <code>cantidad</code> (int4), <code>fecha_registro</code></div>
+            </div>
+          </div>
+
+          <div className="p-3 rounded-xl bg-slate-950 border border-slate-800/80">
+            <div className="font-mono font-bold text-emerald-400 mb-1">mermas</div>
+            <div className="text-slate-400 text-[11px] space-y-0.5">
+              <div>• <code>id</code> (uuid)</div>
+              <div>• <code>empresa_id</code> (uuid)</div>
+              <div>• <code>descripcion</code> (text)</div>
+              <div>• <code>url_fotografia</code>, <code>fecha_reporte</code></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

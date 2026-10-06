@@ -1,5 +1,5 @@
 import React from 'react';
-import { Store, Shield, Users, Building2, BookOpen, LogOut, RefreshCw } from 'lucide-react';
+import { Store, Shield, Users, Building2, BookOpen, LogOut, RefreshCw, Database } from 'lucide-react';
 import { User, Role } from '../data/mockData';
 
 interface NavbarProps {
@@ -9,6 +9,9 @@ interface NavbarProps {
   onLogout: () => void;
   onResetData: () => void;
   activeTab: string;
+  supabaseConnected?: boolean;
+  isSyncing?: boolean;
+  onSyncSupabase?: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -18,6 +21,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onLogout,
   onResetData,
   activeTab,
+  supabaseConnected = true,
+  isSyncing = false,
+  onSyncSupabase,
 }) => {
   return (
     <header className="bg-slate-900/90 backdrop-blur border-b border-slate-800 sticky top-0 z-40">
@@ -31,9 +37,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-white text-base tracking-tight">Comercializadora Los Altos</span>
-                <span className="hidden sm:inline-block text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  Preview Activa
-                </span>
+                {/* Supabase connection badge */}
+                <button
+                  type="button"
+                  onClick={onSyncSupabase}
+                  title="Sincronizado con Supabase (Proyecto: mcpscfblpvffqjloukiz)"
+                  className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition cursor-pointer"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <Database className="w-3 h-3" />
+                  <span>Supabase Live</span>
+                  {isSyncing && <RefreshCw className="w-2.5 h-2.5 animate-spin ml-0.5" />}
+                </button>
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">Control de Inventarios y Colocación</p>
             </div>
@@ -82,6 +97,20 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
 
+            {/* Sincronizar Supabase Botón */}
+            {onSyncSupabase && (
+              <button
+                type="button"
+                onClick={onSyncSupabase}
+                disabled={isSyncing}
+                title="Sincronizar datos con Supabase ahora"
+                className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-medium bg-emerald-950/40 hover:bg-emerald-900/50 text-emerald-300 border border-emerald-700/50 transition"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+                <span>{isSyncing ? 'Sincronizando...' : 'Sync Supabase'}</span>
+              </button>
+            )}
+
             {/* Guía de Despliegue */}
             <button
               type="button"
@@ -93,17 +122,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               }`}
             >
               <BookOpen className="w-3.5 h-3.5 text-purple-400" />
-              <span className="hidden sm:inline">Despliegue & Docs</span>
-            </button>
-
-            {/* Reset mock data */}
-            <button
-              type="button"
-              onClick={onResetData}
-              title="Restablecer datos de prueba"
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 border border-slate-800 transition"
-            >
-              <RefreshCw className="w-4 h-4" />
+              <span className="hidden sm:inline">Despliegue & Supabase</span>
             </button>
 
             {/* Logout button */}
