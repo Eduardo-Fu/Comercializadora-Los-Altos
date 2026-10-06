@@ -1,0 +1,52 @@
+name: Despliegue en GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Instalar dependencias
+        run: npm ci || npm install
+
+      - name: Compilar aplicación
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: "https://mcpscfblpvffqjloukiz.supabase.co"
+          VITE_SUPABASE_ANON_KEY: "sb_publishable_o3qwqY82HaW2nzz56bk6NA_rpYx1k0z"
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Subir artefacto de compilación
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

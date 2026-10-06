@@ -1,5 +1,8 @@
 # Comercializadora Los Altos — Sistema Web de Control de Inventarios y Colocación
 
+[![Demo en Vivo](https://img.shields.io/badge/Demo_Online-Ver_Aplicaci%C3%B3n-2563eb?style=for-the-badge&logo=googlecloud&logoColor=white)](https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app)
+[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-eduardo--fu.github.io-10b981?style=for-the-badge&logo=github&logoColor=white)](https://eduardo-fu.github.io/Losaltosproto/)
+
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat&logo=react)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178c6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
@@ -8,6 +11,24 @@
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?style=flat&logo=docker)](https://www.docker.com/)
 
 Plataforma web integral diseñada para la optimización del control de inventarios físicos, supervisión de colocadoras en campo, reporte de mermas con evidencia fotográfica y generación de reportes analíticos para supermercados independientes y empresas proveedoras en Guatemala.
+
+---
+
+## 🌐 Enlaces Directos de Vista Previa (Live Demo)
+
+Puedes acceder y probar la aplicación directamente en línea a través de los siguientes enlaces:
+
+| Plataforma | Enlace Directo | Estado | Características |
+| :--- | :--- | :--- | :--- |
+| **Cloud Run (AI Studio)** | [👉 Ver Demo en Vivo](https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app) | 🟢 **Activo Inmediatamente** | Roles completos (Admin, Colocadora, Empresa), sincronización con Supabase en tiempo real. |
+| **GitHub Pages** | [👉 eduardo-fu.github.io/Losaltosproto](https://eduardo-fu.github.io/Losaltosproto/) | 🟢 **Configurado** | Despliegue automático vía GitHub Actions (`.github/workflows/deploy.yml`) al hacer push. |
+
+> 💡 **Cómo poner el link en la cabecera de tu repositorio de GitHub:**
+> 1. Ve a la página principal de tu repositorio: [`github.com/Eduardo-Fu/Losaltosproto`](https://github.com/Eduardo-Fu/Losaltosproto)
+> 2. En la columna derecha, en la sección **About**, haz clic en el ícono de engranaje ⚙️.
+> 3. Marca la casilla **Website** y pega la URL:
+>    `https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app`
+> 4. Haz clic en **Save changes**. ¡Aparecerá un botón directo con el link visible para cualquiera que entre a tu repositorio!
 
 ---
 
