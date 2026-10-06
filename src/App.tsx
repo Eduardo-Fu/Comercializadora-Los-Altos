@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { loadInitialState, saveState, AppState, User, Role } from './data/mockData';
-import { supabaseService, SUPABASE_URL } from './lib/supabase';
+import { supabaseService, isSupabaseConfigured } from './lib/supabase';
 import { Navbar } from './components/Navbar';
 import { LoginView } from './views/LoginView';
 import { AdminView } from './views/AdminView';
@@ -12,12 +12,23 @@ import { CheckCircle2, AlertCircle } from 'lucide-react';
 export default function App() {
   const [state, setState] = useState<AppState>(() => loadInitialState());
   const [activeTab, setActiveTab] = useState<string>('main');
-  const [supabaseConnected, setSupabaseConnected] = useState<boolean>(true);
+  const [supabaseConnected, setSupabaseConnected] = useState<boolean>(isSupabaseConfigured);
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [syncToast, setSyncToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
   // Synchronize state with Supabase tables
   const syncWithSupabase = useCallback(async (notify: boolean = false) => {
+    if (!isSupabaseConfigured) {
+      setSupabaseConnected(false);
+      if (notify) {
+        setSyncToast({
+          type: 'success',
+          msg: 'Modo Local / Preview activo con persistencia en navegador.',
+        });
+        setTimeout(() => setSyncToast(null), 4000);
+      }
+      return;
+    }
     try {
       setIsSyncing(true);
       const [tiendas, empresas, productos, colocadoras, inventarios, mermas] = await Promise.all([
@@ -293,8 +304,14 @@ export default function App() {
       <footer className="border-t border-slate-800/80 bg-slate-950 py-4 px-4 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between max-w-7xl mx-auto w-full">
         <span>Comercializadora Los Altos • Control de Inventarios y Colocación</span>
         <div className="flex items-center gap-2 mt-2 sm:mt-0 text-[11px] text-slate-400">
-          <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block animate-pulse" />
-          <span>Conectado a Supabase: <code className="text-emerald-400 font-mono">mcpscfblpvffqjloukiz</code></span>
+          <span
+            className={`w-2 h-2 rounded-full inline-block ${
+              supabaseConnected ? 'bg-emerald-400 animate-pulse' : 'bg-blue-400'
+            }`}
+          />
+          <span>
+            {supabaseConnected ? 'Conectado a Supabase' : 'Modo Preview / Local'}
+          </span>
         </div>
       </footer>
     </div>

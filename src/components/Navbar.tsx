@@ -37,18 +37,24 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <span className="font-bold text-white text-base tracking-tight">Comercializadora Los Altos</span>
-                {/* Supabase connection badge */}
-                <button
-                  type="button"
-                  onClick={onSyncSupabase}
-                  title="Sincronizado con Supabase (Proyecto: mcpscfblpvffqjloukiz)"
-                  className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition cursor-pointer"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <Database className="w-3 h-3" />
-                  <span>Supabase Live</span>
-                  {isSyncing && <RefreshCw className="w-2.5 h-2.5 animate-spin ml-0.5" />}
-                </button>
+                {/* Connection badge */}
+                {supabaseConnected ? (
+                  <button
+                    type="button"
+                    onClick={onSyncSupabase}
+                    title="Sincronizado con Supabase"
+                    className="hidden sm:inline-flex items-center gap-1.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 hover:bg-emerald-500/20 transition cursor-pointer"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    <Database className="w-3 h-3" />
+                    <span>Supabase Live</span>
+                    {isSyncing && <RefreshCw className="w-2.5 h-2.5 animate-spin ml-0.5" />}
+                  </button>
+                ) : (
+                  <span className="hidden sm:inline-block text-[10px] uppercase font-semibold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                    Preview Activa
+                  </span>
+                )}
               </div>
               <p className="text-xs text-slate-400 hidden sm:block">Control de Inventarios y Colocación</p>
             </div>

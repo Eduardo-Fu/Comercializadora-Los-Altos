@@ -36,8 +36,8 @@ jobs:
       - name: Compilar aplicación
         run: npm run build
         env:
-          VITE_SUPABASE_URL: "https://mcpscfblpvffqjloukiz.supabase.co"
-          VITE_SUPABASE_ANON_KEY: "sb_publishable_o3qwqY82HaW2nzz56bk6NA_rpYx1k0z"
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
 
       - name: Configurar GitHub Pages
         uses: actions/configure-pages@v5

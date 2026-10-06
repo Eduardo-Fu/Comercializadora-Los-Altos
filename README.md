@@ -1,7 +1,7 @@
 # Comercializadora Los Altos — Sistema Web de Control de Inventarios y Colocación
 
-[![Demo en Vivo](https://img.shields.io/badge/Demo_Online-Ver_Aplicaci%C3%B3n-2563eb?style=for-the-badge&logo=googlecloud&logoColor=white)](https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app)
-[![GitHub Pages](https://img.shields.io/badge/GitHub_Pages-eduardo--fu.github.io-10b981?style=for-the-badge&logo=github&logoColor=white)](https://eduardo-fu.github.io/Losaltosproto/)
+[![GitHub Pages](https://img.shields.io/badge/Demo_Online-GitHub_Pages-10b981?style=for-the-badge&logo=github&logoColor=white)](https://eduardo-fu.github.io/Losaltosproto/)
+[![Deploy with Vercel](https://img.shields.io/badge/Deploy-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FEduardo-Fu%2FLosaltosproto)
 
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black?style=flat&logo=next.js)](https://nextjs.org/)
 [![React](https://img.shields.io/badge/React-18.3-61dafb?style=flat&logo=react)](https://react.dev/)
@@ -14,32 +14,40 @@ Plataforma web integral diseñada para la optimización del control de inventari
 
 ---
 
-## 🌐 Enlaces Directos de Vista Previa (Live Demo)
+## 🌐 Cómo Ver la Aplicación en Línea (Demo Pública)
 
-Puedes acceder y probar la aplicación directamente en línea a través de los siguientes enlaces:
+Para que cualquier persona pueda abrir y probar tu proyecto directamente desde GitHub:
 
-| Plataforma | Enlace Directo | Estado | Características |
-| :--- | :--- | :--- | :--- |
-| **Cloud Run (AI Studio)** | [👉 Ver Demo en Vivo](https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app) | 🟢 **Activo Inmediatamente** | Roles completos (Admin, Colocadora, Empresa), sincronización con Supabase en tiempo real. |
-| **GitHub Pages** | [👉 eduardo-fu.github.io/Losaltosproto](https://eduardo-fu.github.io/Losaltosproto/) | 🟢 **Configurado** | Despliegue automático vía GitHub Actions (`.github/workflows/deploy.yml`) al hacer push. |
+### Opción 1: GitHub Pages (Directo en tu GitHub — Gratis y Permanente)
 
-> 💡 **Cómo poner el link en la cabecera de tu repositorio de GitHub:**
-> 1. Ve a la página principal de tu repositorio: [`github.com/Eduardo-Fu/Losaltosproto`](https://github.com/Eduardo-Fu/Losaltosproto)
-> 2. En la columna derecha, en la sección **About**, haz clic en el ícono de engranaje ⚙️.
-> 3. Marca la casilla **Website** y pega la URL:
->    `https://ais-pre-yh76it24rtbybb2sameyth-651500077203.us-east1.run.app`
-> 4. Haz clic en **Save changes**. ¡Aparecerá un botón directo con el link visible para cualquiera que entre a tu repositorio!
+La aplicación ya cuenta con el flujo automatizado de compilación en `.github/workflows/deploy.yml`.
+
+1. En tu repositorio en GitHub, ve a **Settings** (pestaña superior).
+2. En el menú izquierdo, haz clic en **Pages**.
+3. En la sección **Build and deployment** > **Source**, selecciona: **`GitHub Actions`**.
+4. Haz `git push` a tu rama `main` (o ejecuta el workflow manualmente desde la pestaña **Actions**).
+5. Tu sitio estará disponible públicamente en:
+   👉 **`https://eduardo-fu.github.io/Losaltosproto/`**
+
+---
+
+### Opción 2: Despliegue en Vercel (En 30 segundos)
+
+1. Ingresa a [Vercel](https://vercel.com) e inicia sesión con tu cuenta de GitHub.
+2. Haz clic en **Add New Project** e importa tu repositorio **`Eduardo-Fu/Losaltosproto`**.
+3. (Opcional) Si deseas conectar tu base de datos Supabase, agrega en **Environment Variables**:
+   - `VITE_SUPABASE_URL`
+   - `VITE_SUPABASE_ANON_KEY`
+4. Haz clic en **Deploy**. Obtendrás un enlace público permanente HTTPS (ejemplo: `https://losaltosproto.vercel.app`).
 
 ---
 
 ## 📋 Tabla de Contenidos
 - [Características Principales](#-características-principales)
 - [Módulos y Roles](#-módulos-y-roles)
-- [Arquitectura de Base de Datos (Supabase)](#-arquitectura-de-base-de-datos-supabase)
+- [Arquitectura de Base de Datos](#-arquitectura-de-base-de-datos)
 - [Credenciales de Demostración](#-credenciales-de-demostración)
-- [Requisitos Previos](#-requisitos-previos)
 - [Instalación y Ejecución Local](#-instalación-y-ejecución-local)
-- [Despliegue en Producción](#-despliegue-en-producción)
 - [Estructura del Proyecto](#-estructura-del-proyecto)
 - [Licencia](#-licencia)
 
@@ -52,7 +60,7 @@ Puedes acceder y probar la aplicación directamente en línea a través de los s
 - **Control Fotográfico de Mermas**: Registro de productos dañados con fotografía, supermercado, empresa y motivo para reclamos de garantía y créditos.
 - **Alertas de Vencimiento de Lotes**: Clasificación visual automática de productos en estado *Vigente*, *Por Vencer (< 30 días)* y *Vencido*.
 - **Portal de Proveedores con Aislamiento**: Cada marca (ej. Irex, Tío Nacho) visualiza únicamente sus existencias, rotación de producto (Alta, Media, Baja) y puede descargar reportes en formato CSV.
-- **Base de Datos en Supabase / PostgreSQL**: Conexión nativa en la nube mediante API y persistencia en tiempo real.
+- **Base de Datos en Supabase / PostgreSQL**: Conexión opcional a Supabase con persistencia local de respaldo.
 
 ---
 
@@ -81,12 +89,7 @@ Puedes acceder y probar la aplicación directamente en línea a través de los s
 
 ---
 
-## 🗄️ Arquitectura de Base de Datos (Supabase)
-
-El proyecto está conectado a la base de datos de **Supabase**:
-- **Proyecto ID**: `mcpscfblpvffqjloukiz`
-- **URL**: `https://mcpscfblpvffqjloukiz.supabase.co`
-- **Región**: `us-west-2` (Oregon)
+## 🗄️ Arquitectura de Base de Datos
 
 ```mermaid
 erDiagram
@@ -161,75 +164,26 @@ El sistema incluye usuarios preconfigurados listos para pruebas:
 
 ---
 
-## ⚙️ Requisitos Previos
-
-- [Node.js](https://nodejs.org/) v18.0 o superior (recomendado v20+).
-- [Docker](https://www.docker.com/) y Docker Compose (opcional para despliegue contenerizado).
-- Cuenta activa en [Supabase](https://supabase.com).
-
----
-
 ## 🚀 Instalación y Ejecución Local
 
-### Opción A: Con Docker Compose (Recomendado - 1 Comando)
+### Con Docker Compose (Recomendado)
 
 ```bash
-# 1. Clonar el repositorio
 git clone https://github.com/Eduardo-Fu/Losaltosproto.git
 cd Losaltosproto
-
-# 2. Iniciar contenedores de aplicación y base de datos
 docker compose up --build
 ```
-Una vez iniciado, abre en tu navegador: **`http://localhost:3000`**
+Abre en tu navegador: **`http://localhost:3000`**
 
----
+### Con Node.js
 
-### Opción B: Ejecución nativa con Node.js
-
-1. **Clonar e instalar dependencias:**
-   ```bash
-   git clone https://github.com/Eduardo-Fu/Losaltosproto.git
-   cd Losaltosproto
-   npm install
-   ```
-
-2. **Configurar variables de entorno:**
-   Copia el archivo de ejemplo:
-   ```bash
-   cp .env.example .env
-   ```
-   Verifica tus claves en `.env`:
-   ```env
-   VITE_SUPABASE_URL="https://mcpscfblpvffqjloukiz.supabase.co"
-   VITE_SUPABASE_ANON_KEY="sb_publishable_o3qwqY82HaW2nzz56bk6NA_rpYx1k0z"
-   JWT_SECRET="losaltos_super_secret_jwt_key_2026_securerandom"
-   ```
-
-3. **Iniciar el servidor de desarrollo:**
-   ```bash
-   npm run dev
-   ```
-   Abre **`http://localhost:3000`** en tu navegador.
-
----
-
-## 🌐 Despliegue en Producción
-
-### Despliegue Rápido en Vercel
-1. Conecta tu repositorio de GitHub `Eduardo-Fu/Losaltosproto` en [Vercel](https://vercel.com).
-2. Agrega las variables de entorno en el panel de Vercel:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-   - `JWT_SECRET`
-3. Haz clic en **Deploy**. Vercel configurará el dominio HTTPS de forma automática.
-
-### Despliegue en Servidor VPS (Ubuntu + Nginx + Docker)
-Tu repositorio incluye los archivos para despliegue en servidor propio:
-- `docker-compose.prod.yml`: Configuración de producción para contenedores aislados.
-- `nginx/default.conf`: Configuración de proxy inverso Nginx con cabeceras de seguridad.
-- `scripts/backup.sh`: Script automatizado para respaldos de base de datos con rotación.
-- Para instrucciones detalladas paso a paso, consulta [DEPLOYMENT.md](./DEPLOYMENT.md).
+```bash
+git clone https://github.com/Eduardo-Fu/Losaltosproto.git
+cd Losaltosproto
+npm install
+npm run dev
+```
+Abre en tu navegador: **`http://localhost:3000`**
 
 ---
 
@@ -237,26 +191,20 @@ Tu repositorio incluye los archivos para despliegue en servidor propio:
 
 ```text
 Losaltosproto/
+├── .github/workflows/          # Flujo automatizado de despliegue en GitHub Pages
+│   └── deploy.yml
 ├── docker-compose.yml          # Configuración Docker Compose desarrollo
 ├── docker-compose.prod.yml     # Configuración Docker Compose producción
 ├── Dockerfile                  # Construcción de contenedor
 ├── DEPLOYMENT.md               # Guía exhaustiva de despliegue en Ubuntu y SSL
 ├── PLAN_DE_PROYECTO.md         # Documentación de especificación funcional
-├── nginx/                      # Configuración de servidor web proxy
-│   └── default.conf
-├── scripts/                    # Scripts de mantenimiento y backups
-│   └── backup.sh
 ├── src/
 │   ├── app/                    # Rutas y páginas de la aplicación
-│   │   ├── admin/              # Vistas administrativas
-│   │   ├── colocadora/         # Vistas de colocadoras
-│   │   ├── empresa/            # Vistas analíticas de empresas
-│   │   └── login/              # Portal de acceso
 │   ├── components/             # Componentes reutilizables (Navbar, modales)
-│   ├── data/                   # Manejo de datos y sincronización
-│   ├── lib/                    # Clientes de Supabase, utilidades y almacenamiento
+│   ├── data/                   # Manejo de datos y almacenamiento
+│   ├── lib/                    # Cliente de Supabase y utilidades
 │   └── views/                  # Vistas principales de la interfaz
-└── public/                     # Archivos estáticos y fotografías
+└── public/                     # Archivos estáticos
 ```
 
 ---
