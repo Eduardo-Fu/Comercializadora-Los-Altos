@@ -12,13 +12,13 @@ import { CheckCircle2, AlertCircle } from 'lucide-react';
 export default function App() {
   const [state, setState] = useState<AppState>(() => loadInitialState());
   const [activeTab, setActiveTab] = useState<string>('main');
-  const [supabaseConnected, setSupabaseConnected] = useState<boolean>(isSupabaseConfigured);
+  const [supabaseConnected, setSupabaseConnected] = useState<boolean>(() => isSupabaseConfigured());
   const [isSyncing, setIsSyncing] = useState<boolean>(false);
   const [syncToast, setSyncToast] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
   // Synchronize state with Supabase tables
   const syncWithSupabase = useCallback(async (notify: boolean = false) => {
-    if (!isSupabaseConfigured) {
+    if (!isSupabaseConfigured()) {
       setSupabaseConnected(false);
       if (notify) {
         setSyncToast({
@@ -286,7 +286,7 @@ export default function App() {
 
       <main className="flex-1">
         {activeTab === 'despliegue' ? (
-          <DeploymentGuideView />
+          <DeploymentGuideView onConfigChange={() => syncWithSupabase(true)} />
         ) : state.currentUser.role === 'ADMIN' ? (
           <AdminView state={state} onUpdateState={handleUpdateState} />
         ) : state.currentUser.role === 'COLOCADORA' ? (
